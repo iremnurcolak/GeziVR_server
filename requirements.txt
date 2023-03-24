@@ -35,3 +35,4 @@ attrs
 pyrsistent 
 pycparser 
 setuptools
+Flask-Cors
