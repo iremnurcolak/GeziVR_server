@@ -36,3 +36,4 @@ pyrsistent
 pycparser 
 setuptools
 Flask-Cors
+flask_restful
