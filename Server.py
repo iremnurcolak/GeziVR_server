@@ -23,7 +23,7 @@ def hello_world():
     return 'Hello, World!'
 
 @app.route('/<name>')
-def hello_world(name):    
+def users(name):    
     users = ref.get("/users")
     ref.child('users').child('id').set({'name': str(name), 'age': 20})
     return users
