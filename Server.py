@@ -4,6 +4,7 @@ import openai
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+import numpy as np
 
 openai.api_key = "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"
 
@@ -15,10 +16,65 @@ ref = db.reference('/')
 
 app = Flask(__name__)
 
-allArtistURL = "http://www.wikiart.org/en/App/Artist/AlphabetJson?v=new&inPublicDomain={true/false}"
-r = requests.get(url = allArtistURL)
-data = r.json()
-print(data[0]['artistName'])
+#TO DO: suggested muze idlerinden sanatci isimlerini cekip unityde onerileri goster
+
+
+def getVisitedMuseumsMatrix(users, museumsIds):
+    
+    lenMuseums = len(museumsIds)
+    lenUsers = len(users)
+    ratings = np.empty([lenUsers, lenMuseums])
+    i = 0
+    for user in users:
+        ratings[i] = np.zeros(lenMuseums)
+        visitedMuseums = users[user]["visitedMuseums"]
+        if visitedMuseums != "":
+            for museum in visitedMuseums.values():
+                for k in range(lenMuseums):
+                    if museumsIds[k] == int(museum):
+                        ratings[i][k] = 1
+                        break
+        i = i + 1   
+    return ratings
+
+def findMostSimilarUsers(ratings, index):
+    userRatings = ratings[index]
+    similarity = []
+    for i in range(len(ratings)):
+        similarity.append(np.dot(userRatings, ratings[i]) / (np.linalg.norm(userRatings) * np.linalg.norm(ratings[i])))
+    
+    return sorted(range(len(similarity)), key = lambda sub: similarity[sub])[-11:]
+
+@app.route("/suggestMuseum")
+def suggestMuseum():
+    #tum artistleri cek
+    allArtistURL = "http://www.wikiart.org/en/App/Artist/AlphabetJson?v=new&inPublicDomain={true/false}"
+    r = requests.get(url = allArtistURL)
+    allArtists = r.json()
+    #artistlerin contentIdlerini al, bunlar muze idleri olacak
+    museumsIds = []
+    for artist in allArtists:
+        museumsIds.append(artist["contentId"])
+
+    users = ref.child("users").get()
+    #rowlar userlar, columnlar muze idleri 1-0 matrisi
+    ratings = getVisitedMuseumsMatrix(users, museumsIds)
+        
+    i=0
+    for user in users:
+        toBeSuggested = []
+        similarUsers = findMostSimilarUsers(ratings, i)
+        for similarUser in similarUsers:
+            if similarUser != i:
+                ratingsOfSimilar = ratings[similarUser]
+                for j in range(len(ratingsOfSimilar)):
+                    if(ratingsOfSimilar[j] == 1):
+                        print(museumsIds[j])
+                    if ratingsOfSimilar[j] == 1 and ratings[i][j] == 0:
+                        toBeSuggested.append(museumsIds[j])
+        ref.child("users").child(user).child("suggestedMuseums").set(toBeSuggested)          
+        i = i + 1
+    return "Done"
 
 @app.route("/writeInfoForSkeleton/<skeletonName>")
 def writeInfoForSkeleton(skeletonName):

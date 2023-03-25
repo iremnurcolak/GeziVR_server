@@ -3,3 +3,4 @@ Gunicorn
 requests
 firebase_admin
 openai
+numpy
