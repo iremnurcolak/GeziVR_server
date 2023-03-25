@@ -18,6 +18,10 @@ r = requests.get(url = allArtistURL)
 data = r.json()
 print(data[0]['artistName'])
 
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
 @app.route('/<name>')
 def hello_world(name):    
     users = ref.get("/users")
