@@ -22,13 +22,7 @@ print(data[0]['artistName'])
 def hello_world():
     return 'Hello, World!'
 
-@app.route('/<name>')
-def users(name):    
-    users = ref.get("/users")
-    ref.child('users').child('id').set({'name': str(name), 'age': 20})
-    return users
-
-@app.route('/<userId>/<museumId>')
+@app.route('/addVisitedMuseum/<userId>/<museumId>')
 def putMuseum(userId, museumId):    
     visitedMuseums = ref.child("users").child(str(userId)).child("visitedMuseums").get()
     if(visitedMuseums is not None):
