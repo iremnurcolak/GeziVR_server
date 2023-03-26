@@ -129,5 +129,11 @@ def putMuseum(userId, museumId):
 
     return visitedMuseums
 
+@app.route('/getRecommendedMuseums/<userId>')
+def getRecommendedMuseums(userId):
+    recommendedMuseums = ref.child("users").child(str(userId)).child("suggestedMuseums").get()
+    print(type(recommendedMuseums))
+    return recommendedMuseums
+
 #if __name__ == '__main__':
 #  app.run()
