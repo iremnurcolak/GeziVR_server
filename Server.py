@@ -121,7 +121,7 @@ def hello_world():
 @app.route('/addVisitedMuseum/<userId>/<museumId>')
 def putMuseum(userId, museumId):    
     visitedMuseums = ref.child("users").child(str(userId)).child("visitedMuseums").get()
-    if(visitedMuseums is not None):
+    if(visitedMuseums != ""):
         for museum in visitedMuseums.values():
             if museum == str(museumId):
                 return "Bu muze zaten eklenmis"
