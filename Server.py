@@ -122,7 +122,7 @@ def hello_world():
 def putMuseum(userId, museumId, duration):    
     visitedMuseums = ref.child("users").child(str(userId)).child("visitedMuseums").get()
 
-    if(visitedMuseums != ""):
+    if(visitedMuseums != "" or visitedMuseums != None):
         for key in visitedMuseums.keys():
             if visitedMuseums[key]["museumId"] == str(museumId):
                 #make float
