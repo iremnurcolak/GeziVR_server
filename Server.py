@@ -118,16 +118,24 @@ def writeInfoForDino(dinoName):
 def hello_world():
     return 'Hello, World!'
 
-@app.route('/addVisitedMuseum/<userId>/<museumId>')
-def putMuseum(userId, museumId):    
+@app.route('/addVisitedMuseum/<userId>/<museumId>/<duration>')
+def putMuseum(userId, museumId, duration):    
     visitedMuseums = ref.child("users").child(str(userId)).child("visitedMuseums").get()
-    if(visitedMuseums != ""):
-        for museum in visitedMuseums.values():
-            if museum == str(museumId):
-                return "Bu muze zaten eklenmis"
-    ref.child('users').child(str(userId)).child('visitedMuseums').push(str(museumId))
 
-    return visitedMuseums
+    if(visitedMuseums != ""):
+        for key in visitedMuseums.keys():
+            if visitedMuseums[key]["museumId"] == str(museumId):
+                #make float
+
+                duration_total = float(visitedMuseums[key]["duration"])
+                duration_total += float(duration)
+                ref.child('users').child(str(userId)).child('visitedMuseums').child(key).child('duration').set(duration_total)
+                return "Sure arttirildi"
+            
+    
+    ref.child('users').child(str(userId)).child('visitedMuseums').push({"museumId":str(museumId), "duration":float(duration)})
+
+    return "Muze eklendi"
 
 @app.route('/getRecommendedMuseums/<userId>')
 def getRecommendedMuseums(userId):
