@@ -121,8 +121,7 @@ def hello_world():
 @app.route('/addVisitedMuseum/<userId>/<museumId>/<duration>')
 def putMuseum(userId, museumId, duration):    
     visitedMuseums = ref.child("users").child(str(userId)).child("visitedMuseums").get()
-
-    if(visitedMuseums != "" or visitedMuseums != None):
+    if(visitedMuseums is not None):
         for key in visitedMuseums.keys():
             if visitedMuseums[key]["museumId"] == str(museumId):
                 #make float
@@ -144,4 +143,4 @@ def getRecommendedMuseums(userId):
     return recommendedMuseums
 
 #if __name__ == '__main__':
-#  app.run()
+# app.run()
