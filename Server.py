@@ -142,12 +142,13 @@ def getRecommendedMuseums(userId):
     print(type(recommendedMuseums))
     return recommendedMuseums
 
-while True:
-        e = datetime.datetime.now()
-        if e.hour == 20 and e.minute == 0 and e.second == 0:
-            suggestMuseum()
+
 
        
 #if __name__ == '__main__':
 #    app.run()
     
+while True:
+    e = datetime.datetime.now()
+    if e.hour == 20 and e.minute == 15 and e.second == 0:
+        suggestMuseum()
