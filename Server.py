@@ -5,6 +5,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 import numpy as np
+import datetime
 
 openai.api_key = "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"
 
@@ -141,5 +142,12 @@ def getRecommendedMuseums(userId):
     print(type(recommendedMuseums))
     return recommendedMuseums
 
+while True:
+        e = datetime.datetime.now()
+        if e.hour == 20 and e.minute == 0 and e.second == 0:
+            suggestMuseum()
+
+       
 #if __name__ == '__main__':
-# app.run()
+#    app.run()
+    
