@@ -17,9 +17,6 @@ ref = db.reference('/')
 
 app = Flask(__name__)
 
-#TO DO: suggested muze idlerinden sanatci isimlerini cekip unityde onerileri goster
-
-
 def getVisitedMuseumsMatrix(users, museumsIds):   
     lenMuseums = len(museumsIds)
     lenUsers = len(users)
@@ -74,6 +71,19 @@ def suggestMuseum():
                         toBeSuggested.append(museumsIds[j])
         ref.child("users").child(user).child("suggestedMuseums").set(toBeSuggested)          
         i = i + 1
+    return "Done"
+
+@app.route("/deleteFromSuggestedMuseums/<userId>/<museumId>")
+def deleteFromSuggestedMuseums(userId, museumId):
+    suggestedMuseums = ref.child("users").child(str(userId)).child("suggestedMuseums").get()
+    if suggestedMuseums != "" and suggestedMuseums is not None:
+        i=0
+        for id in suggestedMuseums:
+            print(id, museumId)
+            if str(id) == str(museumId):
+                ref.child("users").child(str(userId)).child("suggestedMuseums").child(str(i)).delete()
+                return "Done"
+            i = i + 1
     return "Done"
 
 @app.route("/writeInfoForSkeleton/<skeletonName>")
