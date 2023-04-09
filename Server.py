@@ -152,7 +152,23 @@ def getRecommendedMuseums(userId):
     print(type(recommendedMuseums))
     return recommendedMuseums
 
-  
+@app.route('/getAccountAddress/<userId>')
+def getPaymentInfo(userId):
+    accountAddress = ref.child("users").child(str(userId)).child("accountAddress").get()
+    return accountAddress
+
+@app.route('/getPrivateKey/<userId>')
+def getPrivateKey(userId):
+    privateKey = ref.child("users").child(str(userId)).child("privateKey").get()
+    return privateKey
+
+@app.route("/setPaymentInfo/<userId>/<privateKey>/<accountAddress>")
+def setPaymentInfo(userId, privateKey, accountAddress):
+    ref.child("users").child(str(userId)).child("accountAddress").set(accountAddress)
+    ref.child("users").child(str(userId)).child("privateKey").set(privateKey)
+    return "Done"
+
+
 #if __name__ == '__main__':
 #    app.run()
     
