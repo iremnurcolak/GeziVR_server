@@ -5,7 +5,6 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 import numpy as np
-import datetime
 
 openai.api_key = "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"
 
@@ -159,14 +158,11 @@ def getPaymentInfo(userId):
 
 @app.route('/getPrivateKey/<userId>')
 def getPrivateKey(userId):
-    privateKey = ref.child("users").child(str(userId)).child("privateKey").get()
-    return privateKey
+    privateKey = ref.child("users").child(str(userId)).child("private_key").child("en_privateKey").get()
+    len = ref.child("users").child(str(userId)).child("private_key").child("length").get()
+    json  = {"privateKey": privateKey, "length": len} 
+    return json
 
-@app.route("/setPaymentInfo/<userId>/<privateKey>/<accountAddress>")
-def setPaymentInfo(userId, privateKey, accountAddress):
-    ref.child("users").child(str(userId)).child("accountAddress").set(accountAddress)
-    ref.child("users").child(str(userId)).child("privateKey").set(privateKey)
-    return "Done"
 
 
 #if __name__ == '__main__':
