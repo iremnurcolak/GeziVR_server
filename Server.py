@@ -154,6 +154,8 @@ def getRecommendedMuseums(userId):
 @app.route('/getAccountAddress/<userId>')
 def getPaymentInfo(userId):
     accountAddress = ref.child("users").child(str(userId)).child("accountAddress").get()
+    if(accountAddress == "" or accountAddress is None):
+        return "No account address"
     return accountAddress
 
 @app.route('/getPrivateKey/<userId>')
