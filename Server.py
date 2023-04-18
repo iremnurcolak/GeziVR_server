@@ -172,7 +172,7 @@ def generate_images():
     idea_for_image = generate_idea_for_image()
     images = openai.Image.create(
         prompt=idea_for_image,
-        n=1,
+        n=8,
         size="1024x1024"
     )
     k = 1
