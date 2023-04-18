@@ -166,6 +166,31 @@ def getPrivateKey(userId):
     return json
 
 
+@app.route('/generate_images')
+def generate_images():
+    url_dict = {}
+    idea_for_image = generate_idea_for_image()
+    images = openai.Image.create(
+        prompt=idea_for_image,
+        n=1,
+        size="1024x1024"
+    )
+    k = 1
+    for image in images['data']:
+        url_dict['img{}'.format(k)] = image['url']
+        k += 1
+    return url_dict
+
+
+def generate_idea_for_image():
+    resp = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": "Random idea for a picture, start the sentence with 'Create'"}
+        ]
+    )
+    return resp['choices'][0]['message']['content']
+
 
 #if __name__ == '__main__':
 #    app.run()
