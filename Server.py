@@ -64,7 +64,13 @@ def suggestMuseum():
                 ratingsOfSimilar = ratings[similarUser]
                 for j in range(len(ratingsOfSimilar)):
                     if ratingsOfSimilar[j] !=0 and ratings[i][j] == 0:
-                        toBeSuggested.append(museumsIds[j])
+                        suggest = True
+                        for id in toBeSuggested:
+                            if id == museumsIds[j]:
+                                suggest = False
+                                break
+                        if suggest:
+                            toBeSuggested.append(museumsIds[j])
         ref.child("users").child(user).child("suggestedMuseums").set(toBeSuggested)          
         i = i + 1
     return "Done"
