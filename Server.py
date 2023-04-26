@@ -171,9 +171,10 @@ def getPrivateKey(userId):
 def generate_images():
     url_dict = {}
     idea_for_image = generate_idea_for_image()
+    # api limit 5 oldugundan 5 olarak guncellendi
     images = openai.Image.create(
         prompt=idea_for_image,
-        n=8,
+        n=5,
         size="1024x1024"
     )
     k = 1
