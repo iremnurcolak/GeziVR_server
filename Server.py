@@ -36,10 +36,7 @@ def getVisitedMuseumsMatrix(users, museumsIds):
 def findMostSimilarUsers(ratings, index):
     userRatings = ratings[index]
     similarity = []
-    print("index: " + str(index))
     for i in range(len(ratings)):
-        print( "bbb" + str(np.linalg.norm(userRatings) * np.linalg.norm(ratings[i])))
-        print(np.dot(userRatings, ratings[i]) / (np.linalg.norm(userRatings) * np.linalg.norm(ratings[i])))
         similarity.append(np.dot(userRatings, ratings[i]) / (np.linalg.norm(userRatings) * np.linalg.norm(ratings[i])))
 
     return sorted(range(len(similarity)), key = lambda sub: similarity[sub])[-11:]
@@ -49,7 +46,7 @@ def suggestMuseum():
     allArtistURL = "http://www.wikiart.org/en/App/Artist/AlphabetJson?v=new&inPublicDomain={true/false}"
     r = requests.get(url = allArtistURL)
     allArtists = r.json()
-    #artistlerin contentIdlerini al, bunlar muze idleri olacak
+
     museumsIds = []
     for artist in allArtists:
         museumsIds.append(artist["contentId"])
@@ -78,7 +75,6 @@ def deleteFromSuggestedMuseums(userId, museumId):
     if suggestedMuseums != "" and suggestedMuseums is not None:
         i=0
         for id in suggestedMuseums:
-            print(id, museumId)
             if str(id) == str(museumId):
                 ref.child("users").child(str(userId)).child("suggestedMuseums").child(str(i)).delete()
                 return "Done"
@@ -148,7 +144,6 @@ def putMuseum(userId, museumId, duration):
 @app.route('/getRecommendedMuseums/<userId>')
 def getRecommendedMuseums(userId):
     recommendedMuseums = ref.child("users").child(str(userId)).child("suggestedMuseums").get()
-    print(type(recommendedMuseums))
     return recommendedMuseums
 
 @app.route('/getAccountAddress/<userId>')
